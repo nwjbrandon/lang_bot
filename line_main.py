@@ -431,14 +431,24 @@ def build_mode_message() -> Dict[str, Any]:
         MODE_TEST_HIRAGANA: "Test Hiragana",
         MODE_TEST_MEANING: "Test Meaning",
     }
-    items = [
-        quick_reply_postback(mode_to_label[m], f"{CALLBACK_MODE_PREFIX}{m}", mode_to_label[m])
-        for m in MODE_OPTIONS
-    ]
+    items = [quick_reply_postback(mode_to_label[m], f"{CALLBACK_MODE_PREFIX}{m}", mode_to_label[m]) for m in MODE_OPTIONS]
     return {
         "type": "text",
         "text": "Choose a quiz mode:",
         "quickReply": {"items": items},
+    }
+
+
+def build_welcome_message(current_mode: str) -> Dict[str, Any]:
+    return {
+        "type": "text",
+        "text": (f"Welcome to the JLPT...\n\nCommands:\n/quiz - start a 4-option quiz\n/mode - change quiz mode\n/reset - reset score and progress\n/stats - see your score\n/help - show help\n\nCurrent mode: {current_mode}"),
+        "quickReply": {
+            "items": [
+                quick_reply_message("Quiz", "/quiz"),
+                quick_reply_message("Mode", "/mode"),
+            ]
+        },
     }
 
 
@@ -509,21 +519,7 @@ class BotRuntime:
 
         if normalized in {"/start", "start"}:
             resolved = self.quiz_data.resolve_mode(user_state.get("mode", self.quiz_data.default_mode))
-            return [
-                {
-                    "type": "text",
-                    "text": (
-                        "Welcome to the JLPT vocab quiz bot\n\n"
-                        "Commands:\n"
-                        "/quiz - start a 4-option quiz\n"
-                        "/mode - change quiz mode\n"
-                        "/reset - reset score and progress\n"
-                        "/stats - see your score\n"
-                        "/help - show help\n\n"
-                        f"Current mode: {resolved}"
-                    ),
-                }
-            ]
+            return [build_welcome_message(resolved)]
 
         if normalized in {"/help", "help"}:
             return [
@@ -662,6 +658,7 @@ class LineWebhookHandler(BaseHTTPRequestHandler):
 
         content_length = int(self.headers.get("Content-Length", "0"))
         body = self.rfile.read(content_length)
+        logger.info("Received LINE webhook: %s", body.decode("utf-8"))
         signature = self.headers.get("X-Line-Signature", "")
 
         if not verify_signature(self.channel_secret, body, signature):
