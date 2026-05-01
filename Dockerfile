@@ -1,18 +1,22 @@
 
-# docker run --rm --env-file .env jlpt-bot
-FROM python:3.13-slim
+FROM python:3.14.4-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    APP_FILE=main_line.py
 
 WORKDIR /app
 
 # Install uv to resolve dependencies from uv.lock reproducibly.
-RUN pip install --no-cache-dir uv==0.8.17
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -LsSf https://astral.sh/uv/install.sh | sh \
+    && mv /root/.local/bin/uv /usr/local/bin/uv
 
-COPY pyproject.toml uv.lock main.py ./
+COPY pyproject.toml uv.lock main_line.py ./
 RUN uv sync --frozen --no-dev --no-install-project
 
 COPY data/ ./data
 
-CMD ["./.venv/bin/python", "main.py"]
+CMD ["sh", "-c", "./.venv/bin/python ${APP_FILE}"]

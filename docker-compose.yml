@@ -1,0 +1,12 @@
+services:
+  jlpt-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: jlpt-bot:latest
+    container_name: jlpt-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data:ro
