@@ -631,7 +631,7 @@ def main() -> None:
     channel_access_token = os.getenv("LINE_CHANNEL_ACCESS_TOKEN", "").strip()
     channel_secret = os.getenv("LINE_CHANNEL_SECRET", "").strip()
     csv_path = os.getenv("CSV_PATH", "./english_japanese_sentences.csv").strip()
-    default_mode = os.getenv("PHRASE_QUIZ_MODE", MODE_EN_TO_JA).strip() or MODE_EN_TO_JA
+    default_mode = os.getenv("QUIZ_MODE", MODE_EN_TO_JA).strip() or MODE_EN_TO_JA
     host = os.getenv("LINE_HOST", "0.0.0.0").strip() or "0.0.0.0"
     port = int(os.getenv("LINE_PORT", "8000"))
 
@@ -642,7 +642,7 @@ def main() -> None:
     if not csv_path:
         raise RuntimeError("CSV_PATH が設定されていません。")
     if default_mode not in VALID_MODES:
-        raise RuntimeError(f"PHRASE_QUIZ_MODE は次のいずれかを指定してください: {', '.join(sorted(VALID_MODES))}")
+        raise RuntimeError(f"QUIZ_MODE は次のいずれかを指定してください: {', '.join(sorted(VALID_MODES))}")
 
     rows = load_rows(csv_path)
     quiz_data = PhraseQuizData(rows, default_mode=default_mode)
