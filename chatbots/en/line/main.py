@@ -633,7 +633,7 @@ def main() -> None:
     csv_path = os.getenv("CSV_PATH", "./english_japanese_sentences.csv").strip()
     default_mode = os.getenv("PHRASE_QUIZ_MODE", MODE_EN_TO_JA).strip() or MODE_EN_TO_JA
     host = os.getenv("LINE_HOST", "0.0.0.0").strip() or "0.0.0.0"
-    port = int(os.getenv("LINE_PORT", "8001"))
+    port = int(os.getenv("LINE_PORT", "8000"))
 
     if not channel_access_token:
         raise RuntimeError("LINE_CHANNEL_ACCESS_TOKEN が設定されていません。")
