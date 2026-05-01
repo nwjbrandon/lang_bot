@@ -188,7 +188,7 @@ def _resolve_csv_files(csv_source: str) -> List[Path]:
             return csv_files
         raise ValueError(f"No CSV files found in directory: {source}")
 
-    raise ValueError(f"VOCAB_CSV_PATH must be a CSV file or directory: {source}")
+    raise ValueError(f"CSV_PATH must be a CSV file or directory: {source}")
 
 
 def load_rows(csv_path: str) -> List[QuizRow]:
@@ -541,13 +541,13 @@ def main() -> None:
     load_dotenv()
 
     token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
-    csv_path = os.getenv("VOCAB_CSV_PATH", "./data/csv").strip()
+    csv_path = os.getenv("CSV_PATH", "./data/csv").strip()
     default_mode = os.getenv("QUIZ_MODE", MODE_AUTO).strip() or MODE_AUTO
 
     if not token:
         raise RuntimeError("Missing TELEGRAM_BOT_TOKEN environment variable.")
     if not csv_path:
-        raise RuntimeError("Missing VOCAB_CSV_PATH environment variable.")
+        raise RuntimeError("Missing CSV_PATH environment variable.")
     if default_mode not in VALID_MODES:
         raise RuntimeError(f"QUIZ_MODE must be one of: {', '.join(sorted(VALID_MODES))}")
 

@@ -1,0 +1,14 @@
+services:
+  en-line-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: en-line-bot:latest
+    container_name: en-line-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data:ro

@@ -1,0 +1,13 @@
+services:
+  jp-telegram-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: jp-telegram-bot:latest
+    container_name: jp-telegram-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    network_mode: bridge
+    volumes:
+      - ./data:/app/data:ro
