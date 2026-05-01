@@ -1,0 +1,16 @@
+[project]
+name = "jlpt_bot"
+version = "0.1.0"
+description = "JLPT Bot"
+requires-python = ">=3.13"
+dependencies = [
+    "requests==2.33.1",
+    "pandas==3.0.2",
+    "python-telegram-bot==22.7",
+    "python-dotenv==1.1.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff==0.12.10",
+]
