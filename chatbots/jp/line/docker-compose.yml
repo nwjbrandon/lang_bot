@@ -1,11 +1,14 @@
 services:
   jp-line-bot:
     build:
-      context: .
+      # Build from the repo root so the shared langbot package is in context.
+      context: ../../..
       dockerfile: Dockerfile
     image: jp-line-bot:latest
     container_name: jp-line-bot
     restart: unless-stopped
+    environment:
+      APP_MODULE: langbot.apps.jp_line
     env_file:
       - .env
     ports:

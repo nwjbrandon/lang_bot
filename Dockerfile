@@ -1,9 +1,8 @@
-
-FROM python:3.14.4-slim
+FROM python:3.14-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    APP_FILE=main.py
+    APP_MODULE=langbot.apps.jp_line
 
 WORKDIR /app
 
@@ -14,9 +13,11 @@ RUN apt-get update \
     && curl -LsSf https://astral.sh/uv/install.sh | sh \
     && mv /root/.local/bin/uv /usr/local/bin/uv
 
-COPY pyproject.toml uv.lock main.py ./
-RUN uv sync --frozen --no-dev --no-install-project
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
 
-COPY data/ ./data
+COPY langbot ./langbot
 
-CMD ["sh", "-c", "./.venv/bin/python ${APP_FILE}"]
+# APP_MODULE selects which bot to run (overridden per docker-compose service).
+# CSV data is provided at runtime via a mounted volume (see compose files).
+CMD ["sh", "-c", ".venv/bin/python -m ${APP_MODULE}"]

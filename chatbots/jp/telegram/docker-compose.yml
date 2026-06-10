@@ -1,11 +1,14 @@
 services:
   jp-telegram-bot:
     build:
-      context: .
+      # Build from the repo root so the shared langbot package is in context.
+      context: ../../..
       dockerfile: Dockerfile
     image: jp-telegram-bot:latest
     container_name: jp-telegram-bot
     restart: unless-stopped
+    environment:
+      APP_MODULE: langbot.apps.jp_telegram
     env_file:
       - .env
     network_mode: bridge

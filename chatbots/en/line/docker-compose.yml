@@ -1,11 +1,14 @@
 services:
   en-line-bot:
     build:
-      context: .
+      # Build from the repo root so the shared langbot package is in context.
+      context: ../../..
       dockerfile: Dockerfile
     image: en-line-bot:latest
     container_name: en-line-bot
     restart: unless-stopped
+    environment:
+      APP_MODULE: langbot.apps.en_line
     env_file:
       - .env
     ports:
